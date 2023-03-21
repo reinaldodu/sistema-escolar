@@ -109,3 +109,9 @@ body {
 .app-sidebar__toggle::before {
     display: none;
 }
+
+.container_code {
+    background-color: #000;
+    color: #fff;
+    width: 50%;
+  }

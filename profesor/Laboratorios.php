@@ -26,7 +26,7 @@ require_once 'includes/modals/modal_laboratorio.php';
         <main role="main" class="container my-auto">
             <div class="row">
                 <div class="col-10">
-                    <form name="FormData" method="post" action="" enctype="multipart/form-data" class="wrapper">
+                    <form id="FormData" method="POST" enctype="multipart/form-data" class="wrapper">
 
                         <div class="form-group col-6">
                             <b> <label for="titulo">Título :</label></b>
@@ -115,6 +115,7 @@ require_once 'includes/modals/modal_laboratorio.php';
                     var titulo = $('#titulo').val();
                     var descripcion = $('#descripcion').val();
                     var objetivos = $('#objetivos').val();
+                    //se envia el archivo de imagen
                     var imagen = $('#imagen').val();
                     var input_array_titulo = [];
                     var input_array_descripcion = [];
@@ -141,24 +142,22 @@ require_once 'includes/modals/modal_laboratorio.php';
                         alert("Por favor llene todos los campos");
                     } else {
                         //Guardar los datos en la base de datos
+                        const formData = new FormData(document.getElementById("FormData"));
                         $.ajax({
                             url: "guardar_laboratorio.php",
                             type: "POST",
-                            enctype: 'multipart/form-data',
-                            data: {
-                                titulo: titulo,
-                                descripcion: descripcion,
-                                objetivos: objetivos,
-                                imagen: imagen,
-                                input_array_titulo: input_array_titulo,
-                                input_array_descripcion: input_array_descripcion,
-                                input_array_codigo: input_array_codigo,
-                                input_array_codigou: input_array_codigou,
-                                input_array_imagen: input_array_imagen
-                            },
-                            //redireccionar a la pagina de lista de laboratorios
-                            success: function(response) {
-                                    window.location.href = "Lista_Laboratorios.php";
+                            dataType: "html",
+                            data: formData,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function(data) {
+                                if (data == "success") {
+                                    //alert("Datos guardados correctamente");
+                                    window.location.href = "lista_laboratorios.php";
+                                } else {
+                                    alert(data);
+                                }
                             }
 
                         });

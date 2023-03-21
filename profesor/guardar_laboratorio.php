@@ -1,56 +1,112 @@
 <?php
 require_once '../includes/conexion.php';
 
-    //verificar si existe la se recibe la imagen y se guarda en la carpeta images/laboratorios
-    // if (!empty($_FILES['imagen']['name'])) {
-    //     $imagen = $_FILES['imagen']['name'];
-    //     $ruta = $_FILES['imagen']['tmp_name'];
-    //     $destino = "images/laboratorios/" . $imagen;
-    //     copy($ruta, $destino);
-    // }
-    // else{
-    //     $imagen = "images/laboratorios/default.png";
-    // }
-
+    $validar = true;
     //campos estaticos
     $titulo = $_POST['titulo'];
-    $imagen = $_POST['imagen'];
     $descripcion = $_POST['descripcion'];
     $objetivos = $_POST['objetivos'];
-    
-   //campos dinamicos obligatorios
-   if (isset($_POST['input_array_titulo']) && isset($_POST['input_array_imagen']) && isset($_POST['input_array_descripcion'])) {
-    $input_array_titulo = $_POST['input_array_titulo'];
-    $input_array_imagen = $_POST['input_array_imagen'];
-    $input_array_descripcion = $_POST['input_array_descripcion'];
+
+    //variables del archivo imagen
+    $file = $_FILES['imagen']['name'];
+    $tipo = $_FILES['imagen']['type'];
+    $tamano = $_FILES['imagen']['size'];
+    $temp = $_FILES['imagen']['tmp_name'];
+    $destino = "./images/laboratorios/$file";
+
+    //validar que todos los campos esten llenos
+    if ($titulo == '' || $descripcion == '' || $objetivos == '' || $file == '') {
+        echo "Por favor llene todos los campos";
+        $validar = false;
+        exit();
     }
-    //campos dinamicos opcionales
-    if (isset($_POST['input_array_codigo'])) {
-        $input_array_codigo = $_POST['input_array_codigo'];
+
+    //validar  que el archivo sea de tipo imagen
+    if (!((strpos($tipo, "gif") || strpos($tipo, "jpeg") || strpos($tipo, "jpg") || strpos($tipo, "png")))) {
+        echo "El archivo no es una imagen";
+        $validar = false;
+        exit();
     }
-    else{
-        $input_array_codigo = "";
+    //validar que el archivo no sea mayor a 10MB
+    if ($tamano > 10000000) {
+        echo "El archivo es demasiado grande";
+        $validar = false;
+        exit();
     }
-    if (isset($_POST['input_array_codigou'])) {
-        $input_array_codigou = $_POST['input_array_codigou'];
-    }
-    else{
-        $input_array_codigou = "";
-    }
-    
-    //Se insertan los campos estaticos en la tabla laboratorios
-    $sql = "INSERT INTO laboratorios (titulo, imagen, descripcion, objetivos) VALUES ('$titulo', '$imagen', '$descripcion', '$objetivos')";
-    $query = $pdo->prepare(($sql));
-    $query->execute();
-  
-    //Se existen los campos dinamicos obligatorios se insertan en la tabla laboratorios
-    if (isset($input_array_titulo) && isset($input_array_imagen) && isset($input_array_descripcion)) {
-        for ($i = 0; $i < count($input_array_titulo); $i++) {
-            $sql = "INSERT INTO laboratorios (titulo, imagen, descripcion, objetivos, codigo, codigou) VALUES ('$input_array_titulo[$i]', '$input_array_imagen[$i]', '$input_array_descripcion[$i]', '$objetivos', '$input_array_codigo[$i]', '$input_array_codigou[$i]')";
-            $query = $pdo->prepare(($sql));
-            $query->execute();
+
+    //validar los campos dinamicos antes de guardarlos en la base de datos
+    if (isset($_POST['input_array_titulo'])) {
+        $count = count($_POST['input_array_titulo']);
+        for ($i = 0; $i < $count; $i++) {
+            if (isset($_FILES['input_array_imagen']['name'][$i])) {
+                //guardar archivo en la carpeta de images/tareas
+                $tipo = $_FILES['input_array_imagen']['type'][$i];
+                $tamano = $_FILES['input_array_imagen']['size'][$i];
+                //validar  que el archivo sea de tipo imagen
+                if (!((strpos($tipo, "gif") || strpos($tipo, "jpeg") || strpos($tipo, "jpg") || strpos($tipo, "png")))) {
+                    echo "El archivo no es una imagen";
+                    $validar = false;
+                    exit();
+                }
+                //validar que el archivo no sea mayor a 10MB
+                if ($tamano > 10000000) {
+                    echo "El archivo es demasiado grande";
+                    $validar = false;
+                    exit();
+                }
+            }
         }
     }
+
+    //Si no hay errores se guardan los datos en la base de datos
+    if ($validar) {
+        //Se guarda el archivo de imagen en la carpeta images/laboratorios
+        move_uploaded_file($temp, $destino);
+
+        //Se guarda en la base de datos los campos estaticos
+        $sql = "INSERT INTO laboratorios (titulo, imagen, descripcion, objetivos) VALUES ('$titulo', '$file', '$descripcion', '$objetivos')";
+        $query = $pdo->prepare(($sql));
+        $query->execute();
+        $id_laboratorio = $pdo->lastInsertId();
+
+        //Si existen los campos dinamicos se guardan en la base de datos
+        if (isset($_POST['input_array_titulo'])) {
+            $count = count($_POST['input_array_titulo']);
+            for ($i = 0; $i < $count; $i++) {
+                $titulo = $_POST['input_array_titulo'][$i];
+                if (isset($_POST['input_array_descripcion'][$i])) {
+                    $descripcion = $_POST['input_array_descripcion'][$i];
+                } else {
+                    $descripcion = '';
+                }
+                if (isset($_FILES['input_array_imagen']['name'][$i])) {
+                    $imagen = $_FILES['input_array_imagen']['name'][$i];
+                    //guardar archivo en la carpeta de images/tareas
+                    $temp = $_FILES['input_array_imagen']['tmp_name'][$i];
+                    $destino = "./images/tareas/$imagen";
+                    // guardar la imagen en la carpeta de images/tareas
+                    move_uploaded_file($temp, $destino);
+                } else {
+                    $imagen = '';
+                }
+                if (isset($_POST['input_array_codigo'][$i])) {
+                    $codigo = $_POST['input_array_codigo'][$i];
+                } else {
+                    $codigo = '';
+                }
+                if (isset($_POST['input_array_codigou'][$i])) {
+                    $codigou = $_POST['input_array_codigou'][$i];
+                } else {
+                    $codigou = '';
+                }
+                $sql = "INSERT INTO tareas (titulo_tarea, descripcion_tarea, imagen_tarea, codigo, codigou, laboratorio_id) VALUES ('$titulo', '$descripcion', '$imagen', '$codigo', '$codigou', '$id_laboratorio')";
+                $query = $pdo->prepare(($sql));
+                $query->execute();
+            }
+        }
+    }
+    // se envia mensaje de exito
+    echo "success";
     //Se cierra la conexion
     $pdo = null;
 ?>
