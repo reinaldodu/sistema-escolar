@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded',function(){
         formEvaluacion.onsubmit = function(e){
         e.preventDefault();
         var idevaluacion = document.querySelector('#idevaluacion').value;
-        var idcontenido = document.querySelector('#idevaluacion').value;
+        var idcontenido = document.querySelector('#idcontenido').value;
         var titulo = document.querySelector('#titulo').value;
         var descripcion = document.querySelector('#descripcion').value;
         var fecha = document.querySelector('#fecha').value;
@@ -13,6 +13,16 @@ document.addEventListener('DOMContentLoaded',function(){
             swal('Atencion','Todos los campos son obligatorios', 'error');
             return false;
         }
+        //se vañoda que el porcentaje sea un numero y no un string
+        if(isNaN(porcentaje)){
+            swal('Atencion','El porcentaje debe ser un numero', 'error');
+            return false;
+        }
+        //se valida que el porcentaje sea un numero entre 1 y 100
+        if(porcentaje < 1 || porcentaje > 100){
+            swal('Atencion','El porcentaje debe ser un numero entre 1 y 100', 'error');
+            return false;
+        }
 
         var request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
         var url = './models/evaluacion/ajax-evaluacion.php';
@@ -20,10 +30,10 @@ document.addEventListener('DOMContentLoaded',function(){
         request.open('POST',url,true);
         request.send(form);
         request.onreadystatechange = function(){
-            if(request.readyState == 6 && request.status == 200){
+            if(request.readyState == 4 && request.status == 200){
                 var data = JSON.parse(request.responseText);
                     swal({
-                        title: "Crear/Actualizar Evaluacion",
+                        title: data.msg,
                         type: "success",
                         confirmButtonText: "Aceptar",
                         closeOnConfirm: true
@@ -38,7 +48,6 @@ document.addEventListener('DOMContentLoaded',function(){
                             }
                         }
                     })
-
             }
         }
     }

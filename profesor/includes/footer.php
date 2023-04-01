@@ -11,6 +11,7 @@
     <script src="js/functions-contenido.js"></script>
     <script src="js/functions-evaluacion.js"></script>
     <script src="js/functions-laboratorio.js"></script>
+    <script src="js/functions-nota.js"></script>
     <script src="js/functions-tarea.js"></script>
     <!-- Page specific javascripts-->
     <!-- Google analytics script-->

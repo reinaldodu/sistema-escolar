@@ -22,9 +22,9 @@ $sqla = "SELECT * FROM  ev_entregadas as ev
     INNER JOIN alumnos as a ON ev.alumno_id = a.alumno_id
     INNER JOIN evaluaciones as eva ON ev.evaluacion_id = eva.evaluacion_id 
     INNER JOIN contenidos  as c ON eva.contenido_id = c.contenido_id 
-    WHERE  ev.evaluacion_id =? ";
+    WHERE  ev.evaluacion_id = $evaluacion";
 $querya = $pdo->prepare($sqla);
-$querya->execute(array($evalucion));
+$querya->execute();
 $rowa = $querya->rowCount();
 date_default_timezone_set("America/Bogota");
 $fecha=date('Y-m-d')
@@ -75,7 +75,7 @@ $fecha=date('Y-m-d')
   </div>
 
   <div class="row mt-3">
-  <?php if ($row > 0) {
+  <?php if ($rowa > 0) {
     while ($data2 = $querya->fetch()) {
       $porcentaje = '';
       $cargar = '';
@@ -89,9 +89,9 @@ $fecha=date('Y-m-d')
         $porcentaje = '<kbd class="bg-success">Calificado</kbd>';
         $cargar = '';
       } else {
-        require_once 'includes/modals/modal-nota.php';
+        require_once 'includes/modals/modal_nota.php';
         $porcentaje = '<kbd class="bg-danger">Sin Calificar</kbd>';
-        $cargar = '<button class="btn btn-warning" onclick="modalNota()">Cargar nota</button>';
+        $cargar = '<button class="btn btn-warning" onclick="openModalNota()">Cargar nota</button>';
       }
       ?>
     <div class="col-md-12">
@@ -102,7 +102,7 @@ $fecha=date('Y-m-d')
                <th>Alumno</th>
                <th>Observacion</th>
                <th>Material</th>
-               <th>EStatus</th>
+               <th>Estatus</th>
                <th>Cargar nota</th>
              </tr>
            </thead>
@@ -112,7 +112,7 @@ $fecha=date('Y-m-d')
               <td>
                 <div class="input-group">
                  <div class="input-goup-prepend">
-                  <div class="input-group-text"> <i class= "fas fa-dowload"></i>
+                  <div class="input-group-text"> <i class= "fa fa-download"></i>
                   </div>
                  </div>
                  <a class="btn btn-primary" href="BASE_URL<?=$data2['material'];?>"
@@ -131,7 +131,8 @@ $fecha=date('Y-m-d')
   </div>
   </div>
 
-<?php } }?>
+<?php }
+} ?>
 </div>
   <div class="row">
     <a href="contenido.php?curso=<?= $curso ?>" class="btn btn-info">

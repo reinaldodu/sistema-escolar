@@ -1,3 +1,4 @@
+console.log("Hola");
 document.addEventListener('DOMContentLoaded',function(){
     var formEntrega = document.querySelector('#formEntrega');
         formEntrega.onsubmit = function(e){
@@ -20,15 +21,14 @@ document.addEventListener('DOMContentLoaded',function(){
             if(request.readyState == 4 && request.status == 200){
                 var data = JSON.parse(request.responseText);
                     swal({
-                        title: "Crear/Actualizar Contenido",
+                        title: data.msg,
                         type: "success",
                         confirmButtonText: "Aceptar",
                         closeOnConfirm: true
                     },function(confirm){
                         if(confirm) {
-                                location.reload();
-                                formEntrega.reset();
-                            
+                                //volver a la pagina anterior
+                                window.history.back();
                             }
                         })
                   

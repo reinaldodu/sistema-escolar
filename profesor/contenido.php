@@ -46,8 +46,7 @@ $row = $query->rowCount();
                   $data['contenido_id']; ?>)">
                   <i class="fa fa-trash"></i>Eliminar Contenido</button>
 
-                <a class="btn btn-warning icon-btn" href="evaluacion.php?curso=
-                         <?= $data['pm_id']; ?>&contenido=<?= $data['contenido_id']; ?>">
+                <a class="btn btn-warning icon-btn" href="evaluacion.php?curso=<?= $data['pm_id']; ?>&contenido=<?= $data['contenido_id']; ?>">
                   </i>Asignar Evaluaciones</a>
               </p>
 

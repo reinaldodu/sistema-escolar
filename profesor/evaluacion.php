@@ -40,9 +40,7 @@ if(!empty($_GET['curso'])||!empty($_GET['contenido'])){
                     <i class="fa fa-edit"></i>Editar evaluacion</button> <button class="btn btn-danger icon-btn" onclick="eliminarEvaluacion(<?= $data['evaluacion_id']; ?>)">
                     <i class="fa fa-delet"></i>Eliminar evaluacion</button> 
                     
-                    <a class="btn btn-warning icon-btn" href="entregas.php?curso=
-                   <?= $curso;?>&contenido=<?= $data['contenido_id']; ?>  
-                   &eva=<?= $data['evaluacion_id']; ?>">
+                    <a class="btn btn-warning icon-btn" href="entregas.php?curso=<?= $curso;?>&contenido=<?= $data['contenido_id']; ?>&eva=<?= $data['evaluacion_id']; ?>">
                    <i class="fa fa-flag"></i>
                    Ver entregas</a></p>
                    

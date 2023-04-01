@@ -52,53 +52,50 @@
                 <h4 class="card-title text-center"><?=$data['titulo'] ?></h4>
                 <a href="ver_laboratorio.php?laboratorio=<?= $data['id']?>" class="btn btn-primary">Acceder</a>
                 <a href="editar_laboratorio.php?laboratorio=<?= $data['id']?>" class="btn btn-secondary">Editar</a>
-                <!-- <button onclick="confirmar(<?=$data['id']?>)" class="btn btn-danger">Eliminar</button> -->
-                
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" data-whatever="<?=$data['id']?>">Eliminar</button>
-
-
-                <script>
-                  $('#exampleModal').on('show.bs.modal', function (event) {
-                    var button = $(event.relatedTarget) // Button that triggered the modal
-                    var recipient = button.data('whatever') // Extract info from data-* attributes
-                    //Enviar url para eliminar el laboratorio con el id que se envio
-                    var url = "eliminar_laboratorio.php?laboratorio="+recipient;
-                    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-                    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-                    var modal = $(this)
-                    modal.find('.modal-footer .btn-primary').attr("onclick","location.href='"+url+"'");
-                  })
-                  
-                </script>
+               
+                <!-- Boton para eliminar laboratorio a través de un modal -->
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteLaboratorioModal<?=$data['id']?>">Eliminar</button>
 
               </div>
             </div>
         </div>
+
+        <!-- Modal para eliminar laboratorio -->
+      <div class="modal fade" id="deleteLaboratorioModal<?=$data['id']?>" tabindex="-1" role="dialog" aria-labelledby="deleteLaboratorioModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteLaboratorioModalLabel">Eliminar laboratorio <?=$data['titulo']?></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              ¿Estas seguro de eliminar el laboratorio <?=$data['titulo']?>?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-danger" onclick="eliminarLaboratorio(<?=$data['id']?>)">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        function eliminarLaboratorio(id){
+          location.href = 'eliminar_laboratorio.php?laboratorio='+id;
+        }
+      </script>
+
+        
         <?php }  } ?>
 
       </div>  
-    </main>
-    <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Eliminar laboratorio</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-      <p>Desea eliminar el laboratorio?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-        <button type="button" class="btn btn-primary">Si</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<?php
+  </main>
+  <?php
     require_once 'includes/footer.php';
-?>
+  ?>
+</body>
+</html>
+
+

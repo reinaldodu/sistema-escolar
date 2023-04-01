@@ -2,9 +2,9 @@
 if (!empty($_GET['curso']) || !empty($_GET['contenido'])) {
     $curso = $_GET['curso'];
     $contenido = $_GET['contenido'];
-    $evalucion = $_GET['eva'];
+    $evaluacion = $_GET['eva'];
 } else {
-    header("Location: alumno/");
+    header("Location: alumno");
 }
 
 require_once 'includes/header.php';
@@ -18,9 +18,9 @@ INNER JOIN evaluaciones as eva ON ev.evaluacion_id = eva.evaluacion_id
 INNER JOIN contenidos  as c ON eva.contenido_id = c.contenido_id 
 WHERE  ev.evaluacion_id = ? AND a.alumno_id= ?";
 $querya = $pdo->prepare($sqla);
-$querya->execute(array($evalucion, $idAlumno));
+$querya->execute(array($evaluacion, $idAlumno));
 $rowa = $querya->rowCount();
-$sqlf = "SELECT * FROM evaluaciones WHERE contenido_id=$contenido";
+$sqlf = "SELECT * FROM evaluaciones WHERE contenido_id=$contenido AND evaluacion_id = $evaluacion";
 $queryf = $pdo->prepare($sqlf);
 $queryf->execute();
 $result = $queryf->fetch();
@@ -96,7 +96,7 @@ $fechaLimite = $result['fecha'];
                             <h3 class="tile-title">Realizar entrega</h3>
                             <div class="tile-body">
                                 <form class="form-horizontal" id="formEntrega" name="formEntrega" enctype="multipart/form-data">
-                                    <input type="hidden" name="idevaluacion" id="idevaluacion" value="<?=$evalucion; ?>">
+                                    <input type="hidden" name="idevaluacion" id="idevaluacion" value="<?=$evaluacion; ?>">
                                     <input type="hidden" name="idalumno" id="idalumno" value="<?=$idAlumno; ?>">   
 
                                     <div class="form-group row">

@@ -3,7 +3,7 @@
 require '../../../includes/conexion.php';
 
 if(!empty($_GET)) {
-    $idcontenido = $_GET['idevaluacion'];
+    $idevaluacion = $_GET['idevaluacion'];
 
     $sql = "SELECT * FROM evaluaciones WHERE evaluacion_id = ?";
     $query = $pdo->prepare($sql);

@@ -2,10 +2,7 @@
 
 require_once '../../../includes/conexion.php';
 
-if(!empty($_POST)){
-    if(trim($_POST['observacion']) || empty($_POST['descripcion'])){
-        $respuesta = array('status' => false, 'msg' => 'Todos los campos son necesarios');
-}else{
+if($_POST) {
     $idevaluacion = $_POST['idevaluacion'];
     $idalumno = $_POST['idalumno'];
     $observacion = $_POST['observacion'];
@@ -18,22 +15,23 @@ if(!empty($_POST)){
       mkdir($directorio,077,true);
 
     }
-      $destino=$directorio.'/'.$material;    
-
-}
+    $destino=$directorio.'/'.$material;    
   
     if($_FILES['file']['size']>1500000){
         $respuesta=array('status'=>false,'msg'=>'solo se permiten archivos de 15mb');
     }
-}else{
+    else {
 
     $sqlInsert = 'INSERT INTO ev_entregadas(evaluacion_id,alumno_id,material,observacion) VALUES (?,?,?,?)';
     $queryInsert = $pdo->prepare($sqlInsert);
     $request = $queryInsert->execute(array($idevaluacion,$idalumno,$destino,$observacion));
-        move_uploaded_file($url_temp,$destino);
-
-        if($request > 0){
-            $respuesta = array('status' => true,'msg' => 'Evaluacion enviada');
+    move_uploaded_file($url_temp,$destino);
+    if($request){
+        $respuesta = array('status' => true, 'msg' => 'Entrega creada correctamente');
+    }else{
+        $respuesta = array('status' => false, 'msg' => 'No es posible crear la entrega');
+    }
 }
-    echo json_encode($respuesta,JSON_UNESCAPED_UNICODE);
+    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
 }
+?>

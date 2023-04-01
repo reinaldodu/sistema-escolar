@@ -38,8 +38,7 @@ $row = $query->rowCount();
               <h3 class="title">
                 <?= $data['titulo']; ?>
               </h3>
-              <a class="btn btn-warning icon-btn" href="evaluacion.php?curso=
-                       <?= $data['pm_id']; ?>&contenido=<?= $data['contenido_id']; ?>">
+              <a class="btn btn-warning icon-btn" href="evaluacion.php?curso=<?= $data['pm_id']; ?>&contenido=<?= $data['contenido_id']; ?>">
                 <i class="fa fa- flag"></i>Ver Evaluaciones</button></a></p>
             </div>
             <div class="title-body">

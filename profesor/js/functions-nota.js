@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded',function(){
         formNota.onsubmit = function(e){
         e.preventDefault();
         var ideventregada= document.querySelector('#ideventregada').value;
-        var nota = document.querySelector('#idnota').value;
+        var nota = document.querySelector('#nota').value;
         
         if(nota.trim() == '' ){
             swal('Atencion','Todos los campos son obligatorios', 'error');
@@ -42,3 +42,10 @@ document.addEventListener('DOMContentLoaded',function(){
     }
 })
 
+function openModalNota(){
+    document.querySelector('#ideventregada').value = "";
+    document.querySelector('#tituloModal').innerHTML = "Nueva Nota";
+    document.querySelector('#action').innerHTML = "Guardar";
+    document.querySelector('#formNota').reset();
+    $('#modalNota').modal('show');
+}
