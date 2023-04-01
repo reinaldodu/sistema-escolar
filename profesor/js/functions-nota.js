@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded',function(){
                 if(data.status) {
                 
                    swal({
-                        title: "Crear/Actualizar Evaluacion",
+                        title: data.msg,
                         type: "success",
                         confirmButtonText: "Aceptar",
                         closeOnConfirm: true
